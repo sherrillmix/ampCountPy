@@ -70,7 +70,7 @@ def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('i
            maxPosition (int): The maximum position that can be amplified i.e. the size of the target genome
        
        Returns:
-           list of tuples: each tuple contains the start, end and expected amplifications for a region of the genome. Regions not predicted to amplify are not listed.
+           [(int,int,int),(int,int,int),...]: each tuple contains the start, end and expected amplifications for a region of the genome. Regions not predicted to amplify are not listed.
     """
 
     forwardPred=predictAmplificationsSingleStrand(forwards,reverses,maxLength,maxPosition)
