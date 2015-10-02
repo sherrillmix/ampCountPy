@@ -85,8 +85,8 @@ def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('i
 
 
 __AMPLIFICATIONTABLE__=generateAmplificationTable(__MAXLOOKUP__,__MAXLOOKUP__)
-    """Lookup table used by countAmplifications (could calculate each time but efficiency gain using table if many and/or large lookups).
-    """
+"""Lookup table used by countAmplifications (could calculate each time but efficiency gain using table if many and/or large lookups).
+"""
 
  
 
