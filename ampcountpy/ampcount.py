@@ -1,6 +1,5 @@
 __MAXLOOKUP__=1000
 
-
 def initValues(row,col):
     #return 1 if row==1 else row if col == 0 else row*2-1 if col==1 else 0
     if row==0: return 0
