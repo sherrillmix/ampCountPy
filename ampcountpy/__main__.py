@@ -1,6 +1,7 @@
 import argparse
 import sys
 import os
+from ampcount import predictAmplifications 
 
 def readBindingSites(siteFile):
     with open(siteFile, 'r') as f:
@@ -47,14 +48,14 @@ def main(argv):
     reverses=readBindingSites(args.reversePrimers)
 
     if args.verbose: print('Predicting forward amplifications')
-    plusStrand=predictAmplifications(forwards,reverses,args.maxLength,genomeSize)
-
+    predictedAmps=predictAmplifications(forwards,reverses,args.maxLength,genomeSize)
 
     
 
     if args.verbose: print('Writing to '+args.outFile)
     with open(args.outFile, 'w') as f:
-        for start,end,amp in zip(starts,ends,amps):
+        f.write("start,end,amps\n")
+        for start,end,amp in predictedAmps:
             f.write("%d,%d,%d\n" % (start,end,amp))
 
     if args.verbose: print('All done. Thanks')
