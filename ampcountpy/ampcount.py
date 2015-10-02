@@ -1,4 +1,4 @@
-__MAXLOOKUP__=1000
+__MAXLOOKUP__=500
 
 def initValues(row,col):
     #return 1 if row==1 else row if col == 0 else row*2-1 if col==1 else 0
@@ -22,6 +22,17 @@ def cumsum(x):
         yield total
 
 def countAmplifications(nForward,nReverse):
+    """Predicts the number of expected strand displacement amplifications for a region surrounded by a given number of primers.
+    
+       Calculates the expected amplifications for a region surrounded by nForward and nReverse primer binding sites in a multiple strand displacement amplification. This function uses a __MAXLOOKUP__ by __MAXLOOKUP__ lookup table for speed. If you need estimates for more primers than __MAXLOOKUP__ then perhaps generate your own table with generateAmplificationTable (watch out for numbers exceeding max float)
+
+       Args:
+           nForward (int): number of forward primers upstream of this region and within range of the polymerase
+           nReverse (int): number of reverse primers downstream of this region and within range of the polymerase
+       
+       Returns:
+           int: the number of expected amplifications
+    """
     if nForward>__MAXLOOKUP__: raise(IndexError("nForward more than max lookup %d (set to limit memory size of lookup table). Look at using generateAmplificationTable() to make your own table",maxLookup))
     if nReverse>__MAXLOOKUP__: raise(IndexError("nReverse more than max lookup %d (set to limit memory size of lookup table). Look at using generateAmplificationTable() to make your own table",maxLookup))
     if nForward<0: raise(IndexError("nForward less than 0"))
@@ -48,6 +59,20 @@ def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosit
     return out
 
 def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
+    """Predicts the number of expected strand displacement amplifications for a set of primers.
+    
+       Calculates the expected amplifications across a genome for a set of forward and reverse primer binding sites used in multiple strand displacement amplification
+
+       Args:
+           forwards ([int]): The 5'-most position of primer landing sites on the forward strand
+           reverses ([int]): The 3'-most position of primer landing sites on the reverse strand
+           maxLength (int): The maximum length that the polymerase will amplify
+           maxPosition (int): The maximum position that can be amplified i.e. the size of the target genome
+       
+       Returns:
+           list of tuples: each tuple contains the start, end and expected amplifications for a region of the genome. Regions not predicted to amplify are not listed.
+    """
+
     forwardPred=predictAmplificationsSingleStrand(forwards,reverses,maxLength,maxPosition)
     #use last end of forward pred as base for inverting the positions
     maxPosition=forwardPred[-1][1]
@@ -58,7 +83,10 @@ def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('i
     out=[(forward[0], forward[1], forward[2]+reverse[2]) for forward,reverse in zip(forwardPred,reversePred)]
     return(out)
 
+
 __AMPLIFICATIONTABLE__=generateAmplificationTable(__MAXLOOKUP__,__MAXLOOKUP__)
+    """Lookup table used by countAmplifications (could calculate each time but efficiency gain using table if many and/or large lookups).
+    """
 
  
 
