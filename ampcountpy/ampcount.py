@@ -28,7 +28,7 @@ def countAmplifications(nForward,nReverse):
     if nReverse<0: raise(IndexError("nReverse less than 0"))
     return __AMPLIFICATIONTABLE__[nForward][nReverse]
    
-def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
+def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
     #make sure unique
     forwards=list(set(forwards))
     reverses=list(set(reverses))
@@ -46,6 +46,17 @@ def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('i
     #make sure the regions only cover between 1 and maxPosition
     out=[(max(1,start),min(end,maxPosition),amp) for start,end,amp in zip(sortedPos[:-1],sortedPos[1:],sortedAmps[:-1]) if end>=1 and start<=maxPosition]
     return out
+
+def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
+    forwardPred=predictAmplificationsSingleStrand(forwards,reverses,maxLength,maxPosition)
+    #use last end of forward pred as base for inverting the positions
+    maxPosition=forwardPred[-1][1]
+    reversePred=predictAmplificationsSingleStrand([maxPosition-x+1 for x in reverses],[maxPosition-x+1 for x in forwards],maxLength,maxPosition)
+    #reverse and turn back to forward strand indexing
+    reversePred=[(maxPosition-end+1,maxPosition-start+1,amp) for start, end, amp in reversePred[::-1]]
+    if any([forward[0]!=reverse[0] or forward[1]!=reverse[1] for forward, reverse in zip(forwardPred,reversePred)]): raise(BaseException('Mismatched start and end between strands in predictAmplifications'))
+    out=[(forward[0], forward[1], forward[2]+reverse[2]) for forward,reverse in zip(forwardPred,reversePred)]
+    return(out)
 
 __AMPLIFICATIONTABLE__=generateAmplificationTable(__MAXLOOKUP__,__MAXLOOKUP__)
 
