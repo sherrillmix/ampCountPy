@@ -62,21 +62,46 @@ def test_countAmplifications():
 
 def test_predictAmplications():
     assert max([x[2] for x in ampcountpy.predictAmplifications([1,2,3],[4,5,6])]) == 38
-    assert len(ampcountpy.predictAmplifications([1,2,3],[4,5,6],10)) == 10
+    assert len(ampcountpy.predictAmplifications([1,2,3],[4,5,6],3)) == 6
+    assert len(ampcountpy.predictAmplifications([1,2,3],[4,5,6],10)) == 8
+    assert len(ampcountpy.predictAmplifications([1],[3],3)) == 1
+    assert len(ampcountpy.predictAmplifications([1],[])) == 1
+    assert len(ampcountpy.predictAmplifications([],[1])) == 1
+    assert len(ampcountpy.predictAmplifications(range(1,101,1),[])) == 199
+    assert len(ampcountpy.predictAmplifications([x+1e6 for x in range(1,101,1)],[])) == 199
+    assert ampcountpy.predictAmplifications([1],[])[0][2] == 1
+    assert ampcountpy.predictAmplifications([],[1])[0][2] == 1
+    assert ampcountpy.predictAmplifications([1],[3],3)[0][2] == 2
+    assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplifications([1,3],[3],3),[2,4,1])])
+    assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplifications([1,3],[3,5],3),[2,10,2])])
+    assert all([x[0]==y for x,y in zip(ampcountpy.predictAmplifications([1,3],[3,5],3),[1,3,4])])
+    assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplifications([1,3],[3,5],3),[2,3,5])])
+    with pytest.raises(IndexError):
+        ampcountpy.predictAmplifications(range(ampcountpy.ampcount._MAXLOOKUP+1),[0])
+    with pytest.raises(IndexError):
+        ampcountpy.predictAmplifications([0],range(ampcountpy.ampcount._MAXLOOKUP+1))
 
-'''
-test_that("Test predictAmplifications",{
-	expect_that(max(predictAmplifications(1:3,4:6)$amplification), equals(38))
-	expect_that(nrow(predictAmplifications(1:3,4:6,10)), equals(8))
-	expect_that(nrow(predictAmplifications(1,c())), equals(1))
-	expect_that(nrow(predictAmplifications(c(),1)), equals(1))
-	expect_that(nrow(predictAmplifications(1:100,c())), equals(199))
-	expect_that(nrow(predictAmplifications(c(),1e6+1:100,100)), equals(199))
-	expect_that(max(predictAmplifications(c(),1)$amplification), equals(1))
-	expect_that(max(predictAmplifications(1,c())$amplification), equals(1))
-	expect_that(max(predictAmplifications(c(),1:100)$amplification), equals(100))
-	expect_that(max(predictAmplifications(1:100,c())$amplification), equals(100))
-	expect_that(max(predictAmplifications(1:500,c())$amplification), throws_error("limited to"))
-	expect_that(max(predictAmplifications(c(),1:500)$amplification), throws_error("limited to"))
-})
-'''
+def test_predictAmplicationsSingleStrand():
+    assert max([x[2] for x in ampcountpy.predictAmplificationsSingleStrand([1,2,3],[4,5,6])]) == 19
+    assert len(ampcountpy.predictAmplificationsSingleStrand([1,2,3],[4,5,6],3)) == 6
+    assert len(ampcountpy.predictAmplificationsSingleStrand([1,2,3],[4,5,6],10)) == 8
+    assert len(ampcountpy.predictAmplificationsSingleStrand([1],[3],3)) == 2
+    assert len(ampcountpy.predictAmplificationsSingleStrand([1],[])) == 1
+    assert len(ampcountpy.predictAmplificationsSingleStrand([],[1])) == 1
+    assert len(ampcountpy.predictAmplificationsSingleStrand(range(1,101,1),[])) == 199
+    assert len(ampcountpy.predictAmplificationsSingleStrand([x+1e6 for x in range(1,101,1)],[])) == 199
+    assert ampcountpy.predictAmplificationsSingleStrand([1],[])[0][2] == 1
+    assert ampcountpy.predictAmplificationsSingleStrand([],[1])[0][2] == 0
+    assert ampcountpy.predictAmplificationsSingleStrand([1],[3],3)[0][2] == 1
+    assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3],3),[1,3,1])])
+    assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],3),[1,5,1])])
+    assert all([x[0]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],3),[1,3,4])])
+    assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],3),[2,3,5])])
+    with pytest.raises(IndexError):
+        ampcountpy.predictAmplificationsSingleStrand(range(ampcountpy.ampcount._MAXLOOKUP+1),[0])
+    with pytest.raises(IndexError):
+        ampcountpy.predictAmplificationsSingleStrand([0],range(ampcountpy.ampcount._MAXLOOKUP+1))
+    with pytest.raises(IndexError):
+        ampcountpy.predictAmplificationsSingleStrand(range(ampcountpy.ampcount._MAXLOOKUP+1),range(ampcountpy.ampcount._MAXLOOKUP+1))
+
+
