@@ -43,11 +43,13 @@ def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosit
     #make sure unique
     forwards=list(set(forwards))
     reverses=list(set(reverses))
+    #no -1 since we should step down on base following the end
     forwardEnds=[x+maxLength for x in forwards]
-    reverseStarts=[x-maxLength for x in reverses]
+    reverseStarts=[x-maxLength+1 for x in reverses]
     forwardCounters=[1]*len(forwards) + [-1]*len(forwards) + [0]*2*len(reverses)
     reverseCounters=[0]*2*len(forwards) + [1]*len(reverses) + [-1]*len(reverses)
-    sortedCounters=sorted(zip(forwards+forwardEnds+reverseStarts+reverses,forwardCounters,reverseCounters))
+    #add 1 to reverses since we should step down on the following base
+    sortedCounters=sorted(zip(forwards+forwardEnds+reverseStarts+[x+1 for x in reverses],forwardCounters,reverseCounters))
 
     sortedForwardCounts=cumsum([x for _,x,_ in sortedCounters])
     sortedReverseCounts=cumsum([x for _,_,x in sortedCounters])
@@ -55,7 +57,9 @@ def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosit
     sortedAmps=[countAmplifications(start,end) for start,end in zip(sortedForwardCounts,sortedReverseCounts)]
     
     #make sure the regions only cover between 1 and maxPosition
-    out=[(max(1,start),min(end,maxPosition),amp) for start,end,amp in zip(sortedPos[:-1],sortedPos[1:],sortedAmps[:-1]) if end>=1 and start<=maxPosition]
+    out=[(max(1,start),min(end-1,maxPosition),amp) for start,end,amp in zip(sortedPos[:-1],sortedPos[1:],sortedAmps[:-1]) if end>=1 and start<=maxPosition]
+    #make sure we take the last tuple where several tuple describe the same location
+    out=[(x[0],max(x[0],x[1]),x[2]) for  x, lagX in zip(out,out[1:]+[(float('inf'),float('inf'),float('NaN'))]) if x[0]!=lagX[0]]
     return out
 
 def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
