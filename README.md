@@ -10,6 +10,7 @@ git clone https://github.com/sherrillmix/ampcountpy.git
 and run `setup.py` from the resulting directory (the `--user` installs it locally and doesn't require root access):
 ```
 cd ampcountpy
+python setup.py test
 python setup.py install --user
 ```
 
