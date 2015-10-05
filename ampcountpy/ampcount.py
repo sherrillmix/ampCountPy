@@ -1,4 +1,4 @@
-__MAXLOOKUP__=500
+_MAXLOOKUP=500
 
 def initValues(row,col):
     #return 1 if row==1 else row if col == 0 else row*2-1 if col==1 else 0
@@ -9,9 +9,9 @@ def initValues(row,col):
     return 0
 
 def generateAmplificationTable(nForwards=10,nReverses=10):
-    out=[[initValues(row,col) for col in range(nForwards+1+1)] for row in range(nReverses+1+1)] 
-    for row in range(2,(nForwards+1+1)):
-        for col in range(2,(nReverses+1+1)):
+    out=[[initValues(row,col) for col in range(nForwards+1)] for row in range(nReverses+1)] 
+    for row in range(2,(nForwards+1)):
+        for col in range(2,(nReverses+1)):
             out[row][col]=out[row-1][col]+out[row][col-1]+1
     return(out)
 
@@ -24,7 +24,7 @@ def cumsum(x):
 def countAmplifications(nForward,nReverse):
     """Predicts the number of expected strand displacement amplifications for a region surrounded by a given number of primers.
     
-       Calculates the expected amplifications for a region surrounded by nForward and nReverse primer binding sites in a multiple strand displacement amplification. This function uses a __MAXLOOKUP__ by __MAXLOOKUP__ lookup table for speed. If you need estimates for more primers than __MAXLOOKUP__ then perhaps generate your own table with generateAmplificationTable (watch out for numbers exceeding max float)
+       Calculates the expected amplifications for a region surrounded by nForward and nReverse primer binding sites in a multiple strand displacement amplification. This function uses a _MAXLOOKUP by _MAXLOOKUP lookup table for speed. If you need estimates for more primers than _MAXLOOKUP then perhaps generate your own table with generateAmplificationTable (watch out for numbers exceeding max float)
 
        Args:
            nForward (int): number of forward primers upstream of this region and within range of the polymerase
@@ -33,11 +33,11 @@ def countAmplifications(nForward,nReverse):
        Returns:
            int: the number of expected amplifications
     """
-    if nForward>__MAXLOOKUP__: raise(IndexError("nForward more than max lookup %d (set to limit memory size of lookup table). Look at using generateAmplificationTable() to make your own table",maxLookup))
-    if nReverse>__MAXLOOKUP__: raise(IndexError("nReverse more than max lookup %d (set to limit memory size of lookup table). Look at using generateAmplificationTable() to make your own table",maxLookup))
+    if nForward>_MAXLOOKUP: raise(IndexError("nForward more than max lookup %d (set to limit memory size of lookup table). Look at using generateAmplificationTable() to make your own table",_MAXLOOKUP))
+    if nReverse>_MAXLOOKUP: raise(IndexError("nReverse more than max lookup %d (set to limit memory size of lookup table). Look at using generateAmplificationTable() to make your own table",_MAXLOOKUP))
     if nForward<0: raise(IndexError("nForward less than 0"))
     if nReverse<0: raise(IndexError("nReverse less than 0"))
-    return __AMPLIFICATIONTABLE__[nForward][nReverse]
+    return _AMPLIFICATIONTABLE[nForward][nReverse]
    
 def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
     #make sure unique
@@ -49,8 +49,8 @@ def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosit
     reverseCounters=[0]*2*len(forwards) + [1]*len(reverses) + [-1]*len(reverses)
     sortedCounters=sorted(zip(forwards+forwardEnds+reverseStarts+reverses,forwardCounters,reverseCounters))
 
-    sortedReverseCounts=cumsum([x for _,_,x in sortedCounters])
     sortedForwardCounts=cumsum([x for _,x,_ in sortedCounters])
+    sortedReverseCounts=cumsum([x for _,_,x in sortedCounters])
     sortedPos=[x for x,_,_ in sortedCounters]
     sortedAmps=[countAmplifications(start,end) for start,end in zip(sortedForwardCounts,sortedReverseCounts)]
     
@@ -84,7 +84,7 @@ def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('i
     return(out)
 
 
-__AMPLIFICATIONTABLE__=generateAmplificationTable(__MAXLOOKUP__,__MAXLOOKUP__)
+_AMPLIFICATIONTABLE=generateAmplificationTable(_MAXLOOKUP,_MAXLOOKUP)
 """Lookup table used by countAmplifications (could calculate each time but efficiency gain using table if many and/or large lookups).
 """
 
