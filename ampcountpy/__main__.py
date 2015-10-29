@@ -22,7 +22,10 @@ def check_positive_int(value):
         raise argparse.ArgumentTypeError("%s is less than 1" % value)
     return ivalue
 
-def main(argv):
+def main(argv=None):
+    if argv is None:
+        argv=sys.argv[1:]
+
     parser = argparse.ArgumentParser(description="A program to count the number of expected amplifications for a set of forward and reverse primer landing sites in multiple strand displacement amplification. The command generates a csv file (default: output.csv, use `-o` or `--output` to change) with 3 columns; start of region, end of region, expected amplifications.")
     parser.add_argument("-v","--verbose", help="increase output verbosity", action="store_true")
     parser.add_argument("-f","--forwardPrimers", help="a text file containing the 1-based position of the first base of all primer landing sites on the forward strand separated by space or new lines",type=check_file,required=True)
