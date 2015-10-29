@@ -10,7 +10,7 @@ python:
   - "nightly" # currently points to 3.6-dev
 script:
   python setup.py test
-install:
+before_install:
   pip install codecov
 after_success:
   codecov
