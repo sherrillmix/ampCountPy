@@ -11,7 +11,7 @@ python:
 script:
   - test.py tests --cov ampcountpy
 install:
-  - pip install codecov coverage
+  - pip install codecov pytest pytest-cov coverage
   - python setup.py install
 after_success:
   - codecov
