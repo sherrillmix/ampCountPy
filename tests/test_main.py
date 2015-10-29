@@ -32,6 +32,10 @@ def test_readBindingSites(tmpdir):
 
 def test_main(capsys,tmpdir):
     with pytest.raises(SystemExit):
+        __main__.main()
+    out, err=capsys.readouterr()
+    assert 'usage' in err
+    with pytest.raises(SystemExit):
         __main__.main(['-h'])
     out, err=capsys.readouterr()
     assert 'usage' in out
