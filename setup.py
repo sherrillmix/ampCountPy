@@ -32,4 +32,5 @@ setup(name='ampcountpy',
     zip_safe=True,
     tests_require=['pytest'],
     cmdclass = {'test': PyTest},
+    entry_points={ 'console_scripts': [ 'ampcount = ampcountpy.__main__:main' ] }
 )
