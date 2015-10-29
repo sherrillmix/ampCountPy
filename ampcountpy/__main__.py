@@ -8,7 +8,7 @@ def readBindingSites(siteFile):
         sites=[int(x) for x in  f.read().split()]
     return sites
 
-def checkFile(targetFile):
+def check_file(targetFile):
     if not os.path.isfile(targetFile):
         raise argparse.ArgumentTypeError(targetFile+' is not a file')
     if os.access(targetFile, os.R_OK):
@@ -25,12 +25,12 @@ def check_positive_int(value):
 def main(argv):
     parser = argparse.ArgumentParser(description="A program to count the number of expected amplifications for a set of forward and reverse primer landing sites in multiple strand displacement amplification. The command generates a csv file (default: output.csv, use `-o` or `--output` to change) with 3 columns; start of region, end of region, expected amplifications.")
     parser.add_argument("-v","--verbose", help="increase output verbosity", action="store_true")
-    parser.add_argument("-f","--forwardPrimers", help="a text file containing the 1-based position of the first base of all primer landing sites on the forward strand separated by space or new lines",type=checkFile,required=True)
-    parser.add_argument("-r","--reversePrimers", help="a text file containing the 1-based position of the last base of all primer landing sites on the reverse strand separated by space or new lines",type=checkFile,required=True)
+    parser.add_argument("-f","--forwardPrimers", help="a text file containing the 1-based position of the first base of all primer landing sites on the forward strand separated by space or new lines",type=check_file,required=True)
+    parser.add_argument("-r","--reversePrimers", help="a text file containing the 1-based position of the last base of all primer landing sites on the reverse strand separated by space or new lines",type=check_file,required=True)
     parser.add_argument("-l","--maxLength", help="an integer giving the maximum length expected for the polymerase ",type=check_positive_int,default=30000)
     parser.add_argument("-g","--genomeSize", help="an integer giving the maximum position possible for primers (if < 1 then set to the maximum position covered by primers)",type=int,default=-1)
     parser.add_argument("-o","--outFile", help="file to write to ",default="out.csv")
-    args=parser.parse_args()
+    args=parser.parse_args(argv)
         
     if args.verbose:
         print("Arguments: ")
@@ -62,4 +62,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv)
+    main(sys.argv[1:])
