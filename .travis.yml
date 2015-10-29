@@ -9,7 +9,7 @@ python:
   - "3.5-dev" # 3.5 development branch
   - "nightly" # currently points to 3.6-dev
 script:
-  - test.py tests --cov ampcountpy
+  - py.test tests --cov ampcountpy
 install:
   - pip install codecov pytest pytest-cov coverage
   - python setup.py install
