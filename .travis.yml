@@ -11,7 +11,7 @@ python:
 script:
   - python setup.py test
 install:
-  - pip install codecov
+  - pip install codecov coverage
   - python setup.py install
 after_success:
   - codecov
