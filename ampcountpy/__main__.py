@@ -1,7 +1,7 @@
 import argparse
 import sys
 import os
-from ampcount import predictAmplifications 
+from ampcountpy import predictAmplifications 
 
 def readBindingSites(siteFile):
     with open(siteFile, 'r') as f:
