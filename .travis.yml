@@ -9,8 +9,9 @@ python:
   - "3.5-dev" # 3.5 development branch
   - "nightly" # currently points to 3.6-dev
 script:
-  python setup.py test
-before_install:
-  pip install codecov
+  - python setup.py test
+install:
+  - pip install codecov
+  - python setup.py install
 after_success:
-  codecov
+  - codecov
