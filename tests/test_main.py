@@ -41,12 +41,11 @@ def test_main(capsys,tmpdir):
     o = d.join('output.txt')
     f.write("1 10 20")
     r.write("")
-    r = d.join('reverse.txt')
     __main__.main(['-f',str(f),'-r',str(r),'-o',str(o)])
     out=o.read().split('\n')[1:]
     amps=[int(x.split(',')[2]) for x in out if len(x)>0]
     assert all([x==y for x,y in zip(amps,[1,2,3,2,1])])
-    r.write("30 42 51\n")
+    r.write("30 42 51\n\n")
     __main__.main(['-f',str(f),'-r',str(r),'-o',str(o)])
     out=o.read().split('\n')[1:]
     amps=[int(x.split(',')[2]) for x in out if len(x)>0]
@@ -65,7 +64,20 @@ def test_main(capsys,tmpdir):
     assert max(amps)==38
     __main__.main(['-f',str(f),'-r',str(r),'-o',str(o),'-v'])
     out, err=capsys.readouterr()
-    assert 'All done' in out
 
 
 
+def test_commandline(capsys,tmpdir):
+    d = tmpdir.mkdir('dir')
+    f = d.join('forward.txt')
+    r = d.join('reverse.txt')
+    o = d.join('output.txt')
+    f.write("3 10 20 24 49")
+    r.write("30 42 51 90\n\n")
+    __main__.main(['-f',str(f),'-r',str(r),'-o',str(o)])
+    o2 = d.join('output2.txt')
+    os.system('ampcount -f '+str(f)+' -r '+str(r)+' -o '+str(o2))
+    assert o.read() == o2.read()
+    o3 = d.join('output3.txt')
+    os.system('python -m ampcountpy -f '+str(f)+' -r '+str(r)+' -o '+str(o3))
+    assert o.read() == o3.read()
