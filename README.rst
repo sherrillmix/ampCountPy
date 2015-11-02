@@ -16,7 +16,9 @@ Some python functions to count the expected amplifications for genomic regions g
 Installation
 ------------
 Easy install
-~~~~~~~~~~~~ The easy way to install is to just do::
+~~~~~~~~~~~~
+
+The easy way to install is to just do::
 
   pip install ampcountpy
 
