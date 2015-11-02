@@ -14,11 +14,13 @@ Installation
 To install, clone the repository to a local directory using something like:
 
 .. code:: bash
+
     git clone https://github.com/sherrillmix/ampcountpy.git
 
 and run `setup.py` from the resulting directory (the `--user` installs it locally and doesn't require root access):
 
 .. code:: bash
+
     cd ampcountpy
     python setup.py test
     python setup.py install --user
@@ -28,6 +30,7 @@ Run directly
 The module can be called directly using something like:
 
 .. code:: bash
+
     python -m ampcountpy -f forward.txt -r reverse.txt
 
 where `forward.txt` is a text file containing position of primer landing sites on the forward strand and `reverse.txt` is primer landing sites on the reverse strand. By default, amplification predictions are output to out.csv. The full details on options and arguments is available with:
