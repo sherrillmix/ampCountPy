@@ -1,7 +1,7 @@
 ampCountPy
 ----------
-.. image:: https://travis-ci.org/sherrillmix/ampcountpy.svg?branch=master
-    :target: https://travis-ci.org/sherrillmix/ampcountpy
+.. image:: https://travis-ci.org/sherrillmix/ampCountPy.svg?branch=master
+    :target: https://travis-ci.org/sherrillmix/ampCountPy
 .. image:: https://codecov.io/github/sherrillmix/ampCountPy/coverage.svg?branch=master
     :target: https://codecov.io/github/sherrillmix/ampCountPy?branch=master
 
