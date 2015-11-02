@@ -11,15 +11,11 @@ Some python functions to count the expected amplifications for genomic regions g
 Installation
 ============
 
-To install, clone the repository to a local directory using something like:
-
-::
+To install, clone the repository to a local directory using something like::
 
     git clone https://github.com/sherrillmix/ampcountpy.git
 
-and run `setup.py` from the resulting directory (the `--user` installs it locally and doesn't require root access):
-
-::
+and run `setup.py` from the resulting directory (the `--user` installs it locally and doesn't require root access)::
 
   cd ampcountpy
   python setup.py test
@@ -27,21 +23,15 @@ and run `setup.py` from the resulting directory (the `--user` installs it locall
 
 Run directly
 ============
-The module can be called directly using something like:
-
-::
+The module can be called directly using something like::
 
   python -m ampcountpy -f forward.txt -r reverse.txt
 
-or:
-
-::
+or::
 
   ampcountpy -f forward.txt -r reverse.txt
 
-where `forward.txt` is a text file containing position of primer landing sites on the forward strand and `reverse.txt` is primer landing sites on the reverse strand. By default, amplification predictions are output to out.csv. The full details on options and arguments is available with:
-
-::
+where `forward.txt` is a text file containing position of primer landing sites on the forward strand and `reverse.txt` is primer landing sites on the reverse strand. By default, amplification predictions are output to out.csv. The full details on options and arguments is available with::
 
   ampcountpy --help
 
