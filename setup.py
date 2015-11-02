@@ -22,15 +22,21 @@ class PyTest(TestCommand):
         sys.exit(errno)
 
 setup(name='ampcountpy',
-    version='0.1',
-    description='Some python functions to count the expected amplifications for genomic regions given a set of primer binding locations for a multiple displacement amplification reaction.',
+    version='0.1.1',
+    description='Some functions to count the expected amplifications for genomic regions given a set of primer binding locations for a multiple displacement amplification reaction.',
     url='http://github.com/sherrillmix/ampCountPy',
     author='Scott Sherrill-Mix',
     author_email='shescott@upenn.edu',
-    license='GPL-2',
+    license='GPL 3',
     packages=find_packages(),
     zip_safe=True,
     tests_require=['pytest'],
     cmdclass = {'test': PyTest},
-    entry_points={ 'console_scripts': [ 'ampcount = ampcountpy.__main__:main' ] }
+    entry_points={ 'console_scripts': [ 'ampcount = ampcountpy.__main__:main' ] },
+    classifiers=[
+        "Topic :: Scientific/Engineering :: Bio-Informatics",
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: GNU General Public License (GPL)'
+    ],
+    long_description=open('README.rst').read()
 )
