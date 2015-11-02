@@ -36,7 +36,7 @@ The module can be called directly using something like:
 or:
 
 ::
-ampcountpy -f forward.txt -r reverse.txt
+  ampcountpy -f forward.txt -r reverse.txt
 
 where `forward.txt` is a text file containing position of primer landing sites on the forward strand and `reverse.txt` is primer landing sites on the reverse strand. By default, amplification predictions are output to out.csv. The full details on options and arguments is available with:
 
