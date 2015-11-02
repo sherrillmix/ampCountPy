@@ -6,9 +6,9 @@ ampCountPy
 .. image:: https://codecov.io/github/sherrillmix/ampCountPy/coverage.svg?branch=master
     :alt: Codecov
     :target: https://codecov.io/github/sherrillmix/ampCountPy?branch=master
-.. image:: https://pypip.in/v/ampcountpy/badge.png
-    :target: https://crate.io/packages/ampcountpy/
-    :alt: Latest PyPI version
+.. image:: https://badge.fury.io/py/ampcountpy.svg
+    :alt: PyPi version
+    :target: https://badge.fury.io/py/ampcountpy
 
 
 Some python functions to count the expected amplifications for genomic regions given a set of primer binding locations for a `multiple displacement amplification <http://en.wikipedia.org/wiki/Multiple_displacement_amplification>`_ reaction. See `ampCountR <https://github.com/sherrillmix/ampCountR>`_ for more details.
