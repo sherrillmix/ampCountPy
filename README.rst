@@ -65,6 +65,10 @@ where `forwards` are the 5'-most base of primer landing sites on the forward str
 
 Changelog
 ---------
+0.1.3 (2015-11-02)
+
+* Fix header
+
 0.1.2 (2015-11-02)
 
 * Fix changelog formatting
