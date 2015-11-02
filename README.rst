@@ -16,9 +16,7 @@ Some python functions to count the expected amplifications for genomic regions g
 Installation
 ------------
 Easy install
-~~~~~~~~~~~~
-
-The easy way to install is to just do::
+~~~~~~~~~~~~ The easy way to install is to just do::
 
   pip install ampcountpy
 
@@ -65,9 +63,16 @@ where `forwards` are the 5'-most base of primer landing sites on the forward str
 
 Changelog
 ---------
+0.1.2 (2015-11-02)
+
+* Fix changelog formatting
+
 0.1.1 (2015-11-02)
+
 * Pip install instructions
+
 0.1.0 (2015-11-02)
+
 * Initial public release
 
 
