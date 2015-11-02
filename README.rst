@@ -42,7 +42,9 @@ where `forward.txt` is a text file containing position of primer landing sites o
 Using function in python
 ========================
 The main function is `predictAmplifications` which can be used like:
-.. code:: python
+
+..  code:: python
+
   from ampcountpy import predictAmplifications
     forwards=[1,2,3]
     reverses=[5,6,7]
