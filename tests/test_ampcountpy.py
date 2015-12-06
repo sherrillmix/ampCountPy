@@ -59,6 +59,32 @@ def test_countAmplifications():
     with pytest.raises(IndexError):
         ampcountpy.countAmplifications(ampcountpy.ampcount._MAXLOOKUP+1,ampcountpy.ampcount._MAXLOOKUP+1)
 
+def test_countAmplificationsNonTerminal():
+    assert ampcountpy.countAmplifications(0,0,False) == 0
+    assert ampcountpy.countAmplifications(0,9,False) == 0
+    assert ampcountpy.countAmplifications(1,1,False) == 2
+    assert ampcountpy.countAmplifications(20,0,False) == 20
+    assert ampcountpy.countAmplifications(2,3,False) == 18
+    assert ampcountpy.countAmplifications(3,2,False) == 18
+    assert ampcountpy.countAmplifications(2,2,False) == 10
+    with pytest.raises(IndexError):
+        ampcountpy.countAmplifications(ampcountpy.ampcount._MAXLOOKUP+1,ampcountpy.ampcount._MAXLOOKUP+1,False)
+
+def test_countAmplificationsSingleForward():
+    assert ampcountpy.countAmplifications(0,0,False,True) == 0
+    assert ampcountpy.countAmplifications(0,9,False,True) == 0
+    assert ampcountpy.countAmplifications(1,1,False,True) == 2
+    assert ampcountpy.countAmplifications(20,0,False,True) == 1
+    assert ampcountpy.countAmplifications(2,2,False,True) == 6
+    assert ampcountpy.countAmplifications(2,1,True,True) == 1
+    assert ampcountpy.countAmplifications(2,1,False,True) == 2
+    assert ampcountpy.countAmplifications(2,100,True,True) == 1
+    assert ampcountpy.countAmplifications(100,10,True,True) == 1
+    assert ampcountpy.countAmplifications(3,3,True,True)+ampcountpy.countAmplifications(2,3,False,True)+ampcountpy.countAmplifications(1,3,False,True) == ampcountpy.countAmplifications(3,3)
+    assert ampcountpy.countAmplifications(15,5,True,True)+sum([ampcountpy.countAmplifications(x,5,False,True) for x in range(1,15)]) == ampcountpy.countAmplifications(15,5)
+    with pytest.raises(IndexError):
+        ampcountpy.countAmplifications(ampcountpy.ampcount._MAXLOOKUP+1,ampcountpy.ampcount._MAXLOOKUP+1,False,True)
+
 
 def test_predictAmplications():
     assert max([x[2] for x in ampcountpy.predictAmplifications([1,2,3],[4,5,6])]) == 38

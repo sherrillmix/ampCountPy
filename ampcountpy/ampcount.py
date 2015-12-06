@@ -21,7 +21,7 @@ def cumsum(x):
         total += y
         yield total
 
-def countAmplifications(nForward,nReverse):
+def countAmplifications(nForward,nReverse,isTerminal=True,onlyFirstPrimer=False):
     """Predicts the number of expected strand displacement amplifications for a region surrounded by a given number of primers.
     
        Calculates the expected amplifications for a region surrounded by nForward and nReverse primer binding sites in a multiple strand displacement amplification. This function uses a _MAXLOOKUP by _MAXLOOKUP lookup table for speed. If you need estimates for more primers than _MAXLOOKUP then perhaps generate your own table with generateAmplificationTable (watch out for numbers exceeding max float)
@@ -29,6 +29,8 @@ def countAmplifications(nForward,nReverse):
        Args:
            nForward (int): number of forward primers upstream of this region and within range of the polymerase
            nReverse (int): number of reverse primers downstream of this region and within range of the polymerase
+           isTerminal (boolean): If True then there are no upstream forward primers to release the 5'-most forward primer in this set. If FALSE then the 5'-most forward primer is assumed to be released by an unknown upstream primer
+           onlyFirstPrimer (boolean): If True then count only fragments whose initial fragment initiating from the 5'-most forward primer (mostly for internal usage to allow individual counting of sets of primers where only subsets overlap)
        
        Returns:
            int: the number of expected amplifications
@@ -37,7 +39,12 @@ def countAmplifications(nForward,nReverse):
     if nReverse>_MAXLOOKUP: raise(IndexError("nReverse more than max lookup %d (set to limit memory size of lookup table). Look at using generateAmplificationTable() to make your own table",_MAXLOOKUP))
     if nForward<0: raise(IndexError("nForward less than 0"))
     if nReverse<0: raise(IndexError("nReverse less than 0"))
-    return _AMPLIFICATIONTABLE[nForward][nReverse]
+    if onlyFirstPrimer: 
+        return countAmplifications(nForward,nReverse,isTerminal)-countAmplifications(max(0,nForward-1),nReverse,False)
+    if isTerminal:
+        return _AMPLIFICATIONTABLE[nForward][nReverse]
+    else:
+        return _AMPLIFICATIONTABLE[nForward+1][nReverse]-1
    
 def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
     #make sure unique
