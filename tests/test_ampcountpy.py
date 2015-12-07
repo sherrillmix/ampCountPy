@@ -88,6 +88,7 @@ def test_countAmplificationsSingleForward():
 
 def test_predictAmplications():
     assert max([x[2] for x in ampcountpy.predictAmplifications([1,2,3],[4,5,6])]) == 38
+    assert all([x[0]==y[0] and x[1]==y[1] and x[2]==y[2] for x,y in zip(ampcountpy.predictAmplifications([1,2,3],[4,5,6]),ampcountpy.predictAmplifications([3,2,1],[6,5,4]))])
     assert len(ampcountpy.predictAmplifications([1,2,3],[4,5,6],3)) == 6
     assert len(ampcountpy.predictAmplifications([1,2,3],[4,5,6],10)) == 8
     assert len(ampcountpy.predictAmplifications([1],[3],3)) == 1
