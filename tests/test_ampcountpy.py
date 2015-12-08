@@ -105,9 +105,9 @@ def test_predictAmplications():
     assert all([x[0]==y for x,y in zip(ampcountpy.predictAmplifications([1,3],[3,5],3),[1,3,4])])
     assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplifications([1,3],[3,5],3),[2,3,5])])
     with pytest.raises(IndexError):
-        ampcountpy.predictAmplifications(range(ampcountpy.ampcount._MAXLOOKUP+1),[0])
+        ampcountpy.predictAmplifications([x+1 for x in range(ampcountpy.ampcount._MAXLOOKUP+1)],[1])
     with pytest.raises(IndexError):
-        ampcountpy.predictAmplifications([0],range(ampcountpy.ampcount._MAXLOOKUP+1))
+        ampcountpy.predictAmplifications([1],[x+1 for x in range(ampcountpy.ampcount._MAXLOOKUP+1)])
 
 def test_predictAmplicationsSingleStrand():
     assert max([x[2] for x in ampcountpy.predictAmplificationsSingleStrand([1,2,3],[4,5,6])]) == 19
@@ -125,12 +125,14 @@ def test_predictAmplicationsSingleStrand():
     assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],3),[1,5,1])])
     assert all([x[0]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],3),[1,3,4])])
     assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],3),[2,3,5])])
+    assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],3,4),[2,3,4])])
+    assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],300,20),[2,3,5,20])])
+    assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],300,20,10),[20])])
+    assert all([x[0]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],300,20,5),[5,6])])
     with pytest.raises(IndexError):
-        ampcountpy.predictAmplificationsSingleStrand(range(ampcountpy.ampcount._MAXLOOKUP+1),[0])
+        ampcountpy.predictAmplificationsSingleStrand([x+1 for x in range(ampcountpy.ampcount._MAXLOOKUP+1)],[1])
     with pytest.raises(IndexError):
-        ampcountpy.predictAmplificationsSingleStrand([0],range(ampcountpy.ampcount._MAXLOOKUP+1))
-    with pytest.raises(IndexError):
-        ampcountpy.predictAmplificationsSingleStrand(range(ampcountpy.ampcount._MAXLOOKUP+1),range(ampcountpy.ampcount._MAXLOOKUP+1))
+        ampcountpy.predictAmplificationsSingleStrand([1],[x+1 for x in range(ampcountpy.ampcount._MAXLOOKUP+1)])
 
 def test_pairSortedForwardReverse():
     assert ampcountpy.pairSortedForwardReverse([],[]) == []
@@ -142,8 +144,17 @@ def test_pairSortedForwardReverse():
     assert ampcountpy.pairSortedForwardReverse([-1,2,100],[-5,6,110],50) == [[6],[6],[110]]
     assert ampcountpy.pairSortedForwardReverse([1,2],[5,6,100,200,1000],4) == [[],[5]]
     assert ampcountpy.pairSortedForwardReverse([1,2],[5,6],4) == [[],[5]]
+    assert ampcountpy.pairSortedForwardReverse([1,2],[5,6],[10,2]) == [[5,6],[]]
+    assert ampcountpy.pairSortedForwardReverse([1,2,4,5],[6,7],[10,2,-1,0]) == [[6,7],[],[],[]]
+    assert ampcountpy.pairSortedForwardReverse([1,2,4,5],[6,7],[10,2,-1,0],False) == [[0,1],[],[],[]]
+    assert ampcountpy.pairSortedForwardReverse([1,2,100],[5,6,110],50,False) == [[0,1],[0,1],[2]]
+    assert ampcountpy.pairSortedForwardReverse([100,1000],[1,2,3,4,5,6,7,8,9,10,110],50,False) == [[10],[]]
     with pytest.raises(ValueError):
         ampcountpy.pairSortedForwardReverse([1,2,100,5],[5,6])
     with pytest.raises(ValueError):
         ampcountpy.pairSortedForwardReverse([1,2,5],[5,6,4])
+    with pytest.raises(ValueError):
+        ampcountpy.pairSortedForwardReverse([1,2,5],[5,6,4],[2,1])
+    with pytest.raises(ValueError):
+        ampcountpy.pairSortedForwardReverse([1,2,5],[5,6,4],[1])
 

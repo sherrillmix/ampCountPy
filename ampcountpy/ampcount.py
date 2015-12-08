@@ -49,7 +49,10 @@ def countAmplifications(nForward,nReverse,isTerminal=True,onlyFirstPrimer=False)
 def isSorted(x):
     return all([x[ii]<=x[ii+1] for ii in range(len(x)-1)])
 
-def pairSortedForwardReverse(forwards,reverses,maxLength=30000):
+def pairSortedForwardReverse(forwards,reverses,maxLength=None,returnPos=True):
+    if maxLength is None: maxLength=30000
+    if not isinstance(maxLength,list): maxLength=[maxLength]*len(forwards)
+    if len(maxLength) != len(forwards): raise(ValueError("forwards and maxLength different lengths"))
     #if not sorted then we need to sort but that will lose correspondence with information outside the function or add unneccesary code so just throw error for now
     if not isSorted(forwards): raise(ValueError("Unsorted forwards"))
     if not isSorted(reverses): raise(ValueError("Unsorted reverses"))
@@ -58,18 +61,38 @@ def pairSortedForwardReverse(forwards,reverses,maxLength=30000):
     out=[]
     for forwardId in range(len(forwards)):
         out.append([]) 
-        while reverseIdStart<nReverse and reverses[reverseIdStart]<forwards[forwardId]: #<=?
+        while reverseIdStart<nReverse and reverses[reverseIdStart]<forwards[forwardId]:
             reverseIdStart+=1
         reverseId=reverseIdStart
-        while reverseId<nReverse and reverses[reverseId]<forwards[forwardId]+maxLength and reverses[reverseId]>=forwards[forwardId]:
-            out[forwardId].append(reverses[reverseId])
+        while reverseId<nReverse and reverses[reverseId]<forwards[forwardId]+maxLength[forwardId] and reverses[reverseId]>=forwards[forwardId]:
+            if returnPos: out[forwardId].append(reverses[reverseId])
+            else: out[forwardId].append(reverseId)
             reverseId+=1
     return out
 
-        
-    
+def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosition=float('inf'),minPosition=1):
+    #make sure unique
+    forwards=sorted(list(set(forwards)))
+    reverses=sorted(list(set(reverses)))
+    #no -1 since we should step down on base following the end
+    inRangeReverses=pairSortedForwardReverse(forwards,reverses,maxLength)
+    forwardEnds=[x+maxLength for x in forwards]
+    reverseStarts=[x-maxLength+1 for x in reverses]
+    #add 1 to reverses since we should step down on the following base
+    pos=forwards+forwardEnds+reverseStarts+[x+1 for x in reverses]
+    pos.sort()
+    #make sure the regions only cover between 1 and maxPosition
+    out=[(max(minPosition,start),min(end-1,maxPosition)) for start,end in zip(pos[:-1],pos[1:]) if end>=minPosition and start<=maxPosition]
+    #make sure we take the last tuple where several tuple describe the same location
+    out=[(x[0],max(x[0],x[1])) for  x, lagX in zip(out,out[1:]+[(float('inf'),float('inf'),float('NaN'))]) if x[0]!=lagX[0]]
+  #regionForwards<-lapply(out$start,function(x)inRangeReverses[forwards<=x&forwards>=x-maxLength+1])
+    regionForwards=pairSortedForwardReverse([start-maxLength+1 for start,_ in out],forwards,maxLength,False)
+    reverseCounts=[[sum([x>=end for x in inRangeReverses[forwardId]]) for forwardId in forwardIds] for forwardIds, end in zip(regionForwards,[x for _,x in out])]
+    amps=[sum([countAmplifications(f,r,terminal,True) for f,r,terminal in zip(range(len(revCounts),0,-1),revCounts,[True]+[False]*(len(revCounts)-1))]) for revCounts in reverseCounts]
+    out=[(x[0],x[1],y) for x,y in zip(out,amps)]
+    return out
 
-
+'''
 def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
     #make sure unique
     forwards=list(set(forwards))
@@ -97,6 +120,9 @@ def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosit
     #make sure we take the last tuple where several tuple describe the same location
     out=[(x[0],max(x[0],x[1]),x[2]) for  x, lagX in zip(out,out[1:]+[(float('inf'),float('inf'),float('NaN'))]) if x[0]!=lagX[0]]
     return out
+'''
+
+
 
 def predictAmplifications(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
     """Predicts the number of expected strand displacement amplifications for a set of primers.
