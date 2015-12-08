@@ -132,4 +132,14 @@ def test_predictAmplicationsSingleStrand():
     with pytest.raises(IndexError):
         ampcountpy.predictAmplificationsSingleStrand(range(ampcountpy.ampcount._MAXLOOKUP+1),range(ampcountpy.ampcount._MAXLOOKUP+1))
 
+def test_pairSortedForwardReverse():
+    assert ampcountpy.pairSortedForwardReverse([],[]) == []
+    assert ampcountpy.pairSortedForwardReverse([1],[5]) == [[5]]
+    assert ampcountpy.pairSortedForwardReverse([1,2],[5]) == [[5],[5]]
+    assert ampcountpy.pairSortedForwardReverse([1,2,100],[5]) == [[5],[5],[]]
+    assert ampcountpy.pairSortedForwardReverse([1,2,100],[5,6]) == [[5,6],[5,6],[]]
+    assert ampcountpy.pairSortedForwardReverse([1,2,100],[5,6,110],50) == [[5,6],[5,6],[110]]
+    assert ampcountpy.pairSortedForwardReverse([-1,2,100],[-5,6,110],50) == [[6],[6],[110]]
+    assert ampcountpy.pairSortedForwardReverse([1,2],[5,6,100,200,1000],4) == [[],[5]]
+    assert ampcountpy.pairSortedForwardReverse([1,2],[5,6],4) == [[],[5]]
 

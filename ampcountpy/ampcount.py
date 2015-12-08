@@ -46,11 +46,35 @@ def countAmplifications(nForward,nReverse,isTerminal=True,onlyFirstPrimer=False)
     else:
         return _AMPLIFICATIONTABLE[nForward+1][nReverse]-1
    
+def pairSortedForwardReverse(forwards,reverses,maxLength=30000):
+    #make sure sorted
+    reverseIdStart=0
+    nReverse=len(reverses)
+    out=[]
+    for forwardId in xrange(len(forwards)):
+        out.append([]) 
+        while reverseIdStart<nReverse and reverses[reverseIdStart]<forwards[forwardId]: #<=?
+            reverseIdStart+=1
+        reverseId=reverseIdStart
+        while reverseId<nReverse and reverses[reverseId]<forwards[forwardId]+maxLength and reverses[reverseId]>=forwards[forwardId]:
+            out[forwardId].append(reverses[reverseId])
+            reverseId+=1
+    return out
+
+        
+    
+
+
 def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
     #make sure unique
     forwards=list(set(forwards))
     reverses=list(set(reverses))
     #no -1 since we should step down on base following the end
+    #inRangeReverses<-lapply(forwards,function(x)reverses[reverses>=x&reverses-x<maxLength])
+    forwardId=0
+    reverseId=0
+    #for 
+    #inRangeReverses=
     forwardEnds=[x+maxLength for x in forwards]
     reverseStarts=[x-maxLength+1 for x in reverses]
     forwardCounters=[1]*len(forwards) + [-1]*len(forwards) + [0]*2*len(reverses)
