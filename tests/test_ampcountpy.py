@@ -142,4 +142,8 @@ def test_pairSortedForwardReverse():
     assert ampcountpy.pairSortedForwardReverse([-1,2,100],[-5,6,110],50) == [[6],[6],[110]]
     assert ampcountpy.pairSortedForwardReverse([1,2],[5,6,100,200,1000],4) == [[],[5]]
     assert ampcountpy.pairSortedForwardReverse([1,2],[5,6],4) == [[],[5]]
+    with pytest.raises(ValueError):
+        ampcountpy.pairSortedForwardReverse([1,2,100,5],[5,6])
+    with pytest.raises(ValueError):
+        ampcountpy.pairSortedForwardReverse([1,2,5],[5,6,4])
 

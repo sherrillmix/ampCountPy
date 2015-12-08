@@ -46,8 +46,13 @@ def countAmplifications(nForward,nReverse,isTerminal=True,onlyFirstPrimer=False)
     else:
         return _AMPLIFICATIONTABLE[nForward+1][nReverse]-1
    
+def isSorted(x):
+    return all([x[ii]<=x[ii+1] for ii in range(len(x)-1)])
+
 def pairSortedForwardReverse(forwards,reverses,maxLength=30000):
-    #make sure sorted
+    #if not sorted then we need to sort but that will lose correspondence with information outside the function or add unneccesary code so just throw error for now
+    if not isSorted(forwards): raise(ValueError("Unsorted forwards"))
+    if not isSorted(reverses): raise(ValueError("Unsorted reverses"))
     reverseIdStart=0
     nReverse=len(reverses)
     out=[]
