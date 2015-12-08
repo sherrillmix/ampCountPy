@@ -104,6 +104,8 @@ def test_predictAmplications():
     assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplifications([1,3],[3,5],3),[2,10,2])])
     assert all([x[0]==y for x,y in zip(ampcountpy.predictAmplifications([1,3],[3,5],3),[1,3,4])])
     assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplifications([1,3],[3,5],3),[2,3,5])])
+    assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplifications([1,2],[15],10),[1,2,3,2,1])])
+    assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplifications([1,2],[15,16],10),[1,2,3,4,3,2,1])])
     with pytest.raises(IndexError):
         ampcountpy.predictAmplifications([x+1 for x in range(ampcountpy.ampcount._MAXLOOKUP+1)],[1])
     with pytest.raises(IndexError):
@@ -129,6 +131,8 @@ def test_predictAmplicationsSingleStrand():
     assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],300,20),[2,3,5,20])])
     assert all([x[1]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],300,20,10),[20])])
     assert all([x[0]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,3],[3,5],300,20,5),[5,6])])
+    assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,2],[15],10),[1,2,2,1,0])])
+    assert all([x[2]==y for x,y in zip(ampcountpy.predictAmplificationsSingleStrand([1,2],[15,16],10),[1,2,2,2,1,0,0])])
     with pytest.raises(IndexError):
         ampcountpy.predictAmplificationsSingleStrand([x+1 for x in range(ampcountpy.ampcount._MAXLOOKUP+1)],[1])
     with pytest.raises(IndexError):
