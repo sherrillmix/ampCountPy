@@ -56,7 +56,7 @@ def pairSortedForwardReverse(forwards,reverses,maxLength=30000):
     reverseIdStart=0
     nReverse=len(reverses)
     out=[]
-    for forwardId in xrange(len(forwards)):
+    for forwardId in range(len(forwards)):
         out.append([]) 
         while reverseIdStart<nReverse and reverses[reverseIdStart]<forwards[forwardId]: #<=?
             reverseIdStart+=1
