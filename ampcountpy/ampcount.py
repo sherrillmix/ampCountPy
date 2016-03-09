@@ -85,42 +85,11 @@ def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosit
     out=[(max(minPosition,start),min(end-1,maxPosition)) for start,end in zip(pos[:-1],pos[1:]) if end>=minPosition and start<=maxPosition]
     #make sure we take the last tuple where several tuple describe the same location
     out=[(x[0],max(x[0],x[1])) for  x, lagX in zip(out,out[1:]+[(float('inf'),float('inf'),float('NaN'))]) if x[0]!=lagX[0]]
-  #regionForwards<-lapply(out$start,function(x)inRangeReverses[forwards<=x&forwards>=x-maxLength+1])
     regionForwards=pairSortedForwardReverse([start-maxLength+1 for start,_ in out],forwards,maxLength,False)
     reverseCounts=[[sum([x>=end for x in inRangeReverses[forwardId]]) for forwardId in forwardIds] for forwardIds, end in zip(regionForwards,[x for _,x in out])]
     amps=[sum([countAmplifications(f,r,terminal,True) for f,r,terminal in zip(range(len(revCounts),0,-1),revCounts,[True]+[False]*(len(revCounts)-1))]) for revCounts in reverseCounts]
     out=[(x[0],x[1],y) for x,y in zip(out,amps)]
     return out
-
-'''
-def predictAmplificationsSingleStrand(forwards,reverses,maxLength=30000,maxPosition=float('inf')):
-    #make sure unique
-    forwards=list(set(forwards))
-    reverses=list(set(reverses))
-    #no -1 since we should step down on base following the end
-    #inRangeReverses<-lapply(forwards,function(x)reverses[reverses>=x&reverses-x<maxLength])
-    forwardId=0
-    reverseId=0
-    #for 
-    #inRangeReverses=
-    forwardEnds=[x+maxLength for x in forwards]
-    reverseStarts=[x-maxLength+1 for x in reverses]
-    forwardCounters=[1]*len(forwards) + [-1]*len(forwards) + [0]*2*len(reverses)
-    reverseCounters=[0]*2*len(forwards) + [1]*len(reverses) + [-1]*len(reverses)
-    #add 1 to reverses since we should step down on the following base
-    sortedCounters=sorted(zip(forwards+forwardEnds+reverseStarts+[x+1 for x in reverses],forwardCounters,reverseCounters))
-
-    sortedForwardCounts=cumsum([x for _,x,_ in sortedCounters])
-    sortedReverseCounts=cumsum([x for _,_,x in sortedCounters])
-    sortedPos=[x for x,_,_ in sortedCounters]
-    sortedAmps=[countAmplifications(start,end) for start,end in zip(sortedForwardCounts,sortedReverseCounts)]
-    
-    #make sure the regions only cover between 1 and maxPosition
-    out=[(max(1,start),min(end-1,maxPosition),amp) for start,end,amp in zip(sortedPos[:-1],sortedPos[1:],sortedAmps[:-1]) if end>=1 and start<=maxPosition]
-    #make sure we take the last tuple where several tuple describe the same location
-    out=[(x[0],max(x[0],x[1]),x[2]) for  x, lagX in zip(out,out[1:]+[(float('inf'),float('inf'),float('NaN'))]) if x[0]!=lagX[0]]
-    return out
-'''
 
 
 

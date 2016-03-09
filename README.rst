@@ -56,9 +56,9 @@ The main function is `predictAmplifications` which can be used like:
 ..  code:: python
 
   from ampcountpy import predictAmplifications
-    forwards=[1,2,3]
-    reverses=[5,6,7]
-    predictions=predictAmplifications(forwards,reverses)
+  forwards=[1,2,3]
+  reverses=[5,6,7]
+  predictions=predictAmplifications(forwards,reverses)
 
 where `forwards` are the 5'-most base of primer landing sites on the forward strand and `reverses` are the 3'-most base of primers landing on the reverse strand.
 
